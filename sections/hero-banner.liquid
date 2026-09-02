@@ -1,0 +1,448 @@
+{%- if section.blocks.size > 0 -%}
+<hero-banner-slideshow
+  class="hero-banner"
+  style="padding-block-start: {{ section.settings['padding-block-start'] }}px; padding-block-end: {{ section.settings['padding-block-end'] }}px;"
+  data-slide-count="{{ section.blocks.size }}"
+>
+  <div class="hero-banner__track">
+    {%- for block in section.blocks -%}
+      <div
+        class="hero-banner__slide{% if forloop.first %} is-active{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="hero-banner__media">
+          {%- if block.settings.image_desktop != blank -%}
+            <img
+              src="{{ block.settings.image_desktop | image_url: width: 1440 }}"
+              alt="{{ block.settings.heading | escape }}"
+              class="hero-banner__image hero-banner__image--desktop"
+              loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+              width="1440"
+              height="580"
+            >
+          {%- else -%}
+            <div class="hero-banner__image hero-banner__image--desktop hero-banner__placeholder"></div>
+          {%- endif -%}
+          {%- if block.settings.image_mobile != blank -%}
+            <img
+              src="{{ block.settings.image_mobile | image_url: width: 750 }}"
+              alt="{{ block.settings.heading | escape }}"
+              class="hero-banner__image hero-banner__image--mobile"
+              loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+              width="390"
+              height="530"
+            >
+          {%- else -%}
+            <div class="hero-banner__image hero-banner__image--mobile hero-banner__placeholder"></div>
+          {%- endif -%}
+          <div class="hero-banner__overlay"></div>
+        </div>
+        <div class="hero-banner__content">
+          {%- if block.settings.label != blank -%}
+            <p class="hero-banner__label">{{ block.settings.label }}</p>
+          {%- endif -%}
+          {%- if block.settings.heading != blank -%}
+            <h2 class="hero-banner__heading">{{ block.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if block.settings.button_text != blank -%}
+            <a
+              href="{{ block.settings.button_url | default: '#' }}"
+              class="hero-banner__button"
+            >{{- block.settings.button_text -}}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="hero-banner__dots">
+      {%- for block in section.blocks -%}
+        <button
+          type="button"
+          class="hero-banner__dot{% if forloop.first %} is-active{% endif %}"
+          aria-label="Go to slide {{ forloop.index }}"
+          data-index="{{ forloop.index0 }}"
+          on:click="/goToSlide"
+        ></button>
+      {%- endfor -%}
+    </div>
+
+    <button
+      type="button"
+      class="hero-banner__nav hero-banner__nav--prev"
+      aria-label="Previous slide"
+      on:click="/prevSlide"
+    >
+      <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M8 1L2 7.5L8 14" stroke="#27863A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <button
+      type="button"
+      class="hero-banner__nav hero-banner__nav--next"
+      aria-label="Next slide"
+      on:click="/nextSlide"
+    >
+      <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M1 1L7 7.5L1 14" stroke="#27863A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  {%- endif -%}
+</hero-banner-slideshow>
+{%- endif -%}
+
+{% stylesheet %}
+.hero-banner {
+  display: block;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-banner__track {
+  position: relative;
+  width: 100%;
+}
+
+.hero-banner__slide {
+  display: none;
+  position: relative;
+}
+
+.hero-banner__slide.is-active {
+  display: block;
+}
+
+.hero-banner__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-banner__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hero-banner__image--desktop {
+  display: none;
+}
+
+.hero-banner__image--mobile {
+  display: block;
+}
+
+.hero-banner__placeholder {
+  background-color: #D9D9D9;
+}
+
+.hero-banner__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(0deg, rgba(0,0,0,0.5) 39%, rgba(0,0,0,0) 100%);
+}
+
+.hero-banner__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: flex-end;
+  min-height: 530px;
+  padding: 0 20px 40px;
+}
+
+.hero-banner__label {
+  font-family: var(--font-heading--family);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  margin: 0;
+}
+
+.hero-banner__heading {
+  font-family: var(--font-heading--family);
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.hero-banner__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  color: #111111;
+  border-radius: 24px;
+  padding: 14px 32px;
+  font-family: var(--font-heading--family);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.hero-banner__dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 7.5px;
+  z-index: 3;
+}
+
+.hero-banner__dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease, background-color 0.3s ease;
+}
+
+.hero-banner__dot.is-active {
+  width: 50px;
+  height: 6px;
+  border-radius: 18px;
+  background-color: #27863A;
+}
+
+.hero-banner__nav {
+  display: none;
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #27863A;
+  background-color: #FFFFFF;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  padding: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .hero-banner__image--desktop {
+    display: block;
+  }
+
+  .hero-banner__image--mobile {
+    display: none;
+  }
+
+  .hero-banner__overlay {
+    background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+  }
+
+  .hero-banner__content {
+    min-height: 580px;
+    max-width: 517px;
+    padding: 0 0 60px 60px;
+    gap: 28px;
+  }
+
+  .hero-banner__label {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 2.4px;
+  }
+
+  .hero-banner__heading {
+    font-size: 60px;
+    line-height: 60px;
+  }
+
+  .hero-banner__dots {
+    bottom: 24px;
+  }
+
+  .hero-banner__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .hero-banner__dot.is-active {
+    width: 64px;
+    height: 8px;
+    border-radius: 18px;
+  }
+
+  .hero-banner__nav {
+    display: flex;
+    bottom: 24px;
+  }
+
+  .hero-banner__nav--prev {
+    right: 80px;
+  }
+
+  .hero-banner__nav--next {
+    right: 36px;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+import { Component } from '@theme/component';
+
+class HeroBannerSlideshow extends Component {
+  connectedCallback() {
+    super.connectedCallback();
+    this._currentIndex = 0;
+  }
+
+  get _slides() {
+    return Array.from(this.querySelectorAll('.hero-banner__slide'));
+  }
+
+  get _dotElements() {
+    return Array.from(this.querySelectorAll('.hero-banner__dot'));
+  }
+
+  goToSlide(event) {
+    const index = parseInt(event.currentTarget.dataset.index, 10);
+    if (!isNaN(index)) {
+      this._setActive(index);
+    }
+  }
+
+  prevSlide() {
+    const slides = this._slides;
+    if (slides.length === 0) return;
+    this._setActive((this._currentIndex - 1 + slides.length) % slides.length);
+  }
+
+  nextSlide() {
+    const slides = this._slides;
+    if (slides.length === 0) return;
+    this._setActive((this._currentIndex + 1) % slides.length);
+  }
+
+  _setActive(index) {
+    const slides = this._slides;
+    const dots = this._dotElements;
+
+    if (slides[this._currentIndex]) {
+      slides[this._currentIndex].classList.remove('is-active');
+    }
+    if (dots[this._currentIndex]) {
+      dots[this._currentIndex].classList.remove('is-active');
+    }
+
+    this._currentIndex = index;
+
+    if (slides[this._currentIndex]) {
+      slides[this._currentIndex].classList.add('is-active');
+    }
+    if (dots[this._currentIndex]) {
+      dots[this._currentIndex].classList.add('is-active');
+    }
+  }
+}
+
+customElements.define('hero-banner-slideshow', HeroBannerSlideshow);
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Desktop image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Spring Collection 2026"
+        },
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Built for rain, wind and daily movement."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop Spring Collection"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero banner",
+      "blocks": {
+        "slide_1": {
+          "type": "slide"
+        }
+      },
+      "block_order": ["slide_1"]
+    }
+  ]
+}
+{% endschema %}

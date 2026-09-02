@@ -9,6 +9,28 @@
  */
 {
   "sections": {
+    "hero_banner": {
+      "type": "hero-banner",
+      "settings": {
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "name": "Slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/rectangle-3620-desktop-hp-bar-21837521.png",
+            "image_mobile": "shopify://shop_images/rectangle-3537-mobile-hp-bar-21837633.jpg",
+            "label": "Spring Collection 2026",
+            "heading": "Built for rain, wind and daily movement.",
+            "button_text": "Shop Spring Collection",
+            "button_url": "/collections/all"
+          }
+        }
+      },
+      "block_order": ["slide_1"]
+    },
     "hero_jVaWmY": {
       "type": "hero",
       "blocks": {
@@ -276,6 +298,7 @@
     }
   },
   "order": [
+    "hero_banner",
     "hero_jVaWmY",
     "product_list_fa6P9H"
   ]

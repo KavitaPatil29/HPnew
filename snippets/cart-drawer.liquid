@@ -44,6 +44,12 @@
     id="cart-drawer"
     data-skip-node-update
   >
+    <div
+      class="cart-drawer__backdrop"
+      aria-hidden="true"
+      on:click="/close"
+    ></div>
+
     <dialog
       ref="panel"
       class="theme-drawer__dialog color-custom-drawer"
@@ -273,6 +279,29 @@
     .cart-drawer__header,
     .cart-drawer__content {
       background: transparent;
+    }
+  }
+
+  .cart-drawer__backdrop {
+    display: none;
+  }
+
+  @media screen and (min-width: 990px) {
+    .cart-drawer__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: calc(var(--layer-sticky) + var(--drawer-stack-order, 0) - 1);
+      background: rgb(var(--backdrop-color-rgb) / var(--backdrop-opacity));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--animation-speed) var(--animation-timing-fade-out);
+    }
+
+    theme-drawer#cart-drawer[open] .cart-drawer__backdrop {
+      opacity: 1;
+      pointer-events: auto;
+      transition-timing-function: var(--animation-timing-fade-in);
     }
   }
 {% endstylesheet %}
